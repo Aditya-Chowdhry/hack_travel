@@ -1,0 +1,164 @@
+<div class="jumbotron">
+  <center><h1><%=@place.name%></h1></center>
+
+</div>
+<div class="table">
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="well">
+        <h2>Reviews</h2>
+        <p><%= pie_chart @sentiments %></p>
+      </div>
+    </div>
+
+      <div class="col-md-2">
+          <ul class="list-group">
+          <li class="list-group-item list-group-item-default">Places<li>
+          <%@entities.each do |key,entity| %>
+            <%if entity[0]=="Place" || entity[0]=="GeographicFeature" || entity[0]=="Country" || entity[0]=="City"%>
+            <%if entity[1] == "positive"%>
+              <li class="list-group-item list-group-item-success">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%elsif entity[1] == "neutral"%>
+              <li class="list-group-item list-group-item-info">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%else%>
+              <li class="list-group-item list-group-item-danger">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%end%>
+          <%end%>
+          <%end%>
+        </ul>
+        </div>
+
+        <div class="col-md-2">
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-default">Facilities<li>
+          <%@entities.each do |key,entity| %>
+            <%if entity[0]=="Facility"%>
+            <%if entity[1] == "positive"%>
+              <li class="list-group-item list-group-item-success">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%elsif entity[1] == "neutral"%>
+              <li class="list-group-item list-group-item-info">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%else%>
+              <li class="list-group-item list-group-item-danger">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%end%>
+          <%end%>
+          <%end%>
+        </ul>
+        </div>
+
+        <div class="col-md-2">
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-default">Others<li>
+          <%@entities.each do |key,entity| %>
+            <%if entity[0]!="Facility" &&  entity[0]!="Place" && entity[0]!="GeographicFeature" && entity[0]!="Country" && entity[0]!="City"%>
+            <%if entity[1] == "positive"%>
+              <li class="list-group-item list-group-item-success">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%elsif entity[1] == "neutral"%>
+              <li class="list-group-item list-group-item-info">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%else%>
+              <li class="list-group-item list-group-item-danger">
+                <%=key%>
+                <span class="badge"><%=entity[3]%></span>
+              </li>
+            <%end%>
+          <%end%>
+          <%end%>
+        </ul>
+        </div>
+
+
+
+
+
+  </div>
+
+  <div class="row center" id="weather-row">
+    <div class="col-md-2 text-center" id="weather">
+      <img src="https://cdn0.iconfinder.com/data/icons/large-weather-icons/512/Dawn.png" class="img-responsive"/>
+      <h3>Weather Forecast</h3>
+    </div>
+    <%@weather.each do |k,v|%>
+    <div class="col-md-2 text-center">
+      <h3><%=v[3]%></h3>
+      <img src="http://openweathermap.org/img/w/<%=v[5]%>.png"/>
+      <h4>Temp: <%=v[0]%></h4>
+      <i>Min: <%=v[1]%>&nbsp;Max:<%=v[2]%></i>
+      <p><%=v[4]%></p>
+      <h3><%=k%></h3>
+    </div>
+    <%end%>
+  </div>
+
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h2><center>Concepts from User Reviews</center></h2>
+    </div>
+</div>
+</div>
+
+
+<div class="row">
+  <%@concepts_final.each do |key,value|%>
+    <div class="col-md-2 text-center" id="border">
+      <h4><%=key%></h4>
+        <%if value["relevance"].to_f > 0.6%>
+          <span class="label label-success">Popular</span>
+        <%elsif value["relevance"].to_f < 0.4%>
+          <span class="label label-danger">Less Popular</span>
+        <%elsif%>
+          <span class="label label-primary">Neutral</span>
+        <%end%>
+        <%if value.has_key?("knowledgeGraph")%>
+        <h5>Type Hiearchy:
+          <%=value["knowledgeGraph"]["typeHierarchy"]%>
+
+        </h5>
+        <%end%>
+        <h5>Relevant links:<h5>
+        <%if value.has_key?("geo")%>
+          Coordinates:<%=value["geo"]%>
+        <%end%>
+
+                <%if value.has_key?("website")%>
+                  <a href='<%=value["website"]%>'>Website</a>
+                <%end%>
+        <%if value.has_key?("dbpedia")%>
+          <a href='<%=value["dbpedia"]%>'>Dbpedia</a>
+        <%end%>
+
+        <%if value.has_key?("freebase")%>
+          <a href='<%=value["freebase"]%>'>Freebase</a>
+        <%end%>
+
+        <%if value.has_key?("yago")%>
+            <a href='<%=value["yago"]%>'>Yago</a>
+        <%end%>
+    </div>
+  <%end%>
+</div>
+</div>

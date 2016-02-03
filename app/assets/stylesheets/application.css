@@ -11,5 +11,8 @@
  * file per style scope.
  *
  *= require_tree .
+ *= require weather-icons
  *= require_self
+ *= require select2
+ *= require select2-bootstrap
  */

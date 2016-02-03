@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'tourist_places/update'
 
+  get 'tourist_places/explore' => 'tourist_places#show', as: :explore
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
