@@ -124,6 +124,7 @@
 
 <div class="row">
   <%@concepts_final.each do |key,value|%>
+
     <div class="col-md-2 text-center" id="border">
       <h4><%=key%></h4>
         <%if value["relevance"].to_f > 0.6%>
@@ -141,9 +142,10 @@
         <%end%>
         <h5>Relevant links:<h5>
         <%if value.has_key?("geo")%>
-          Coordinates:<%=value["geo"]%>
+          <%coo=value["geo"].split(" ")%>
+          Coordinates:<strong>(<%=coo[0][0,4]%>,<%=coo[1][0,4]%>)</strong>
         <%end%>
-
+        <br>
                 <%if value.has_key?("website")%>
                   <a href='<%=value["website"]%>'>Website</a>
                 <%end%>
@@ -160,5 +162,33 @@
         <%end%>
     </div>
   <%end%>
+</div>
+
+<div class="row">
+  <%@data.each do |key,value|%>
+  <%if !value[1][0].nil?%>
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <img src="<%=value[1][0]%>" alt="...">
+      <div class="caption">
+        <h3><%=key%></h3>
+
+      </div>
+    </div>
+  </div>
+  <%end%>
+  <%end%>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h2><center>User Reviews</center></h2>
+    </div>
+</div>
+</div>
+<div class="row">
+  <div class="container-fluid" id="review">
+  <%=@place.reviews[0,3000]%>....
+  </div>
 </div>
 </div>

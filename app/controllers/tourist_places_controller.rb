@@ -3,6 +3,7 @@ require 'json'
 require 'open_weather'
 require 'httparty'
 require 'nokogiri'
+require 'wikipedia'
 
   def index
 
@@ -44,10 +45,11 @@ require 'nokogiri'
     #binding.pry
     @place_id=params[:place_id]
     @place=Place.find_by(:id => @place_id)
+    @data=[]
   #  binding.pry
     get_sentiment
     get_weather
-
+    #get_wiki
 
   end
 
@@ -81,8 +83,11 @@ require 'nokogiri'
     data.each do |d|
   #    binding.pry
     #sentiment_url='http://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&sentiment=1'
-    entity_url='http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&sentiment=1'
-    concept_url='http://gateway-a.watsonplatform.net/calls/text/TextGetRankedConcepts?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&knowledgeGraph=1'
+  #  entity_url='http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&sentiment=1'
+
+    entity_url='http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities?apikey=ac0e472ffdb38e2768b8c364eaee95a40d8b978d&text=' + d + '&outputMode=json&sentiment=1'
+
+    concept_url='http://gateway-a.watsonplatform.net/calls/text/TextGetRankedConcepts?apikey=ac0e472ffdb38e2768b8c364eaee95a40d8b978d&text=' + d + '&outputMode=json&knowledgeGraph=1'
   #  sentiment_url=URI.escape(sentiment_url)
     entity_url=URI.escape(entity_url)
     concept_url=URI.escape(concept_url)
@@ -102,7 +107,7 @@ require 'nokogiri'
     @entity=JSON.parse(@entity_reponse.body)
 
 
-
+    #binding.pry
     @entity["entities"].each do |a|
       if @entities.has_key?(a["text"])
           @entities[a["text"]][3] = (@entities[a["text"]][3].to_i + a["count"].to_i).to_s
@@ -154,6 +159,25 @@ require 'nokogiri'
     #binding.pry
   end
 
+def get_wiki
+  @data=Hash.new
+  i=0
+  @entities.each do |k,v|
+    if i==2
+      break
+    end
+    arr=Array.new
+    page=Wikipedia.find(k)
+
+    arr.push(page.title)
+
+    arr.push(page.image_urls)
+
+    @data[k] =arr
+    i=i+1
+  end
+#binding.pry
+end
 
 
 end
