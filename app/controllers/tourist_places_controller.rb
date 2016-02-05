@@ -16,7 +16,6 @@ require 'wikipedia'
       end
     end
 
-    binding.pry
 
   end
 
