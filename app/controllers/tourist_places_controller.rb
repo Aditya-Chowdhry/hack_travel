@@ -42,100 +42,27 @@ require 'wikipedia'
   end
 
   def show
-    #binding.pry
     @place_id=params[:place_id]
     @place=Place.find_by(:id => @place_id)
-    @data=[]
-  #  binding.pry
-    get_sentiment
+    @entities=@place.entities.all
+    @concepts=@place.concepts.all
+    @wikis=@place.get_places.all
+    @wikipedia=[]
+    @wikis.each do |wiki|
+      if wiki.title!= "India" && wiki.title.upcase != @place.name.upcase
+        @wikipedia.push(wiki)
+      end
+    end
+    @sentiments={"positive" =>0,"negative" => 0, "neutral" => 0}
+    @entities.each do |entity|
+      @sentiments[entity.sentiment]= @sentiments[entity.sentiment] + 1
+    end
     get_weather
-    #get_wiki
 
   end
 
   def get_sentiment
-    #Get sentiments
-    size=@place.reviews.size
-  #  binding.pry
-    data=[]
-    if(size > 5000)
 
-      i=0
-      j=5000
-
-      cnt=0
-      while(i+j<size)
-        if(cnt==5)
-        break
-        end
-        cnt=cnt+1
-        data.push(@place.reviews[i,j])
-        i=i+5001
-      end
-    else
-      data.push(@place.reviews)
-    end
-
-    @entities=Hash.new
-    # text => [type,sentiment,relevance,count]
-    @concepts=[]
-      @sentiments={"positive"=> 0, "neutral" => 0 ,"negative" => 0}
-    data.each do |d|
-  #    binding.pry
-    #sentiment_url='http://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&sentiment=1'
-  #  entity_url='http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities?apikey=c537addbf85ab414ce4d65809acc0b01a79b7a95&text=' + d + '&outputMode=json&sentiment=1'
-
-    entity_url='http://access.alchemyapi.com/calls/text/TextGetRankedNamedEntities?apikey=ac0e472ffdb38e2768b8c364eaee95a40d8b978d&text=' + d + '&outputMode=json&sentiment=1'
-
-    concept_url='http://gateway-a.watsonplatform.net/calls/text/TextGetRankedConcepts?apikey=ac0e472ffdb38e2768b8c364eaee95a40d8b978d&text=' + d + '&outputMode=json&knowledgeGraph=1'
-  #  sentiment_url=URI.escape(sentiment_url)
-    entity_url=URI.escape(entity_url)
-    concept_url=URI.escape(concept_url)
-  #  @sentiment_reponse=HTTParty.post(sentiment_url,
-  #    :headers => {"Content-Type" => "application/x-www-form-urlencoded"}
-  #   )
-     @entity_reponse=HTTParty.post(entity_url,
-       :headers => {"Content-Type" => "application/x-www-form-urlencoded"}
-      )
-      @concept_reponse=HTTParty.post(concept_url,
-        :headers => {"Content-Type" => "application/x-www-form-urlencoded"}
-       )
-    #   binding.pry
-  #  @sentiment=JSON.parse(@sentiment_reponse.body)
-    @concepts.push(@concept_reponse)
-
-    @entity=JSON.parse(@entity_reponse.body)
-
-
-    #binding.pry
-    @entity["entities"].each do |a|
-      if @entities.has_key?(a["text"])
-          @entities[a["text"]][3] = (@entities[a["text"]][3].to_i + a["count"].to_i).to_s
-          @entities[a["text"]][2] = ((@entities[a["text"]][2].to_f + a["relevance"].to_f)/2).to_s
-      else
-          arr=Array.new
-          arr.push(a["type"])
-          arr.push(a["sentiment"]["type"])
-          arr.push(a["relevance"])
-          arr.push(a["count"])
-          @entities[a["text"]]=arr
-          @sentiments[a["sentiment"]["type"]]= @sentiments[a["sentiment"]["type"]] + 1
-
-          #binding.pry
-      end
-    end
-
-   end
-
-   @entities=@entities.sort_by{|k,v| v[3].to_i }.reverse.to_h
-   @concepts_final=Hash.new
-   @concepts.each do |concept|
-     concept["concepts"].each do |c|
-       @concepts_final[c["text"]]=c
-     end
-   end
-
-  # binding.pry
   end
 
   def get_weather
@@ -160,22 +87,7 @@ require 'wikipedia'
   end
 
 def get_wiki
-  @data=Hash.new
-  i=0
-  @entities.each do |k,v|
-    if i==2
-      break
-    end
-    arr=Array.new
-    page=Wikipedia.find(k)
 
-    arr.push(page.title)
-
-    arr.push(page.image_urls)
-
-    @data[k] =arr
-    i=i+1
-  end
 #binding.pry
 end
 

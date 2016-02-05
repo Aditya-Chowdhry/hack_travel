@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Place_id: 
+  name: MyString
+  sentiment: MyString
+  count: MyString
+  relevance: MyString
+
+two:
+  Place_id: 
+  name: MyString
+  sentiment: MyString
+  count: MyString
+  relevance: MyString
