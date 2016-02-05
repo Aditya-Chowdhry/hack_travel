@@ -7,25 +7,16 @@ require 'wikipedia'
 
   def index
 
-    @places_name=Place.all
+    @places_name=Place.all.order("LENGTH(reviews) DESC")
     @names=[]
     @places_name.each do |place|
       if place.name != "3"
         state=State.find_by(:id => place.state_id)
         @names.push({id: place.id, name: place.name+"  (#{state.name})"})
-
       end
     end
 
-  #      @names = @names.map { |city| [city[:id], city[:name]] }
-  #  binding.pry
-  #  @states_name.each do |state|
-  #    @names.push(state.name+" State")
-  #  end
-
-    #@names=@names.sort
-
-    #logger.debug "#{@names.inspect}"
+    binding.pry
 
   end
 

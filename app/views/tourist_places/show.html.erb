@@ -1,6 +1,19 @@
 <div class="jumbotron">
-  <center><h1><%=@place.name%></h1></center>
-
+  <center><h1><%=@place.name%></h1>
+  <h3>Recommended:
+  <%if (@sentiments["positive"] + @sentiments["neutral"]) > 10 %>
+    <%if @sentiments["positive"] > @sentiments["negative"] + (@sentiments["neutral"]/2)%>
+      Yes<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+    <%elsif @sentiments["positive"] + (@sentiments["neutral"]/2) < @sentiments["negative"]%>
+      No <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+    <%else%>
+      Neutral <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+    <%end%>
+  <%else%>
+  Can't say need more reviews!
+  <%end%>
+</h3>
+</center>
 </div>
 <div class="table">
   <div class="row">
@@ -11,7 +24,31 @@
         <p><%= pie_chart @sentiments %></p>
       </div>
     </div>
+      <div class="col-md-2">
+        <ul class="list-group">
+        <li class="list-group-item">
+          Indications
+        <li>
+          <li class="list-group-item list-group-item-success">
+            Positive <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 
+
+          </li>
+
+            <li class="list-group-item list-group-item-info">
+              Neutral <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            </li>
+
+        <li class="list-group-item list-group-item-danger">
+              Negative <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+        </li>
+
+        <li class="list-group-item list-group-item-default">
+          10 times the word appeared<span class="badge">10</span>
+        </li>
+
+        </ul>
+      </div>
       <div class="col-md-2">
           <ul class="list-group">
           <li class="list-group-item list-group-item-default">Places<li>
@@ -129,11 +166,11 @@
       <div class="col-md-5ths text-center" id="border">
         <h4><%=concept.name%></h4>
         <%if concept.relevance.to_f > 0.6%>
-          <span class="label label-success">Popular</span>
+        <h4>  <span class="label label-success">Popular</span></h4>
         <%elsif concept.relevance.to_f < 0.4%>
-          <span class="label label-danger">Less Popular</span>
+        <h4>  <span class="label label-danger">Less Popular</span></h4>
         <%elsif%>
-          <span class="label label-primary">Neutral</span>
+        <h4>  <span class="label label-primary">Neutral</span></h4>
         <%end%>
 
         <h5>Relevant links:<h5>
