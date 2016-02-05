@@ -34,6 +34,7 @@ gem "chartkick"
 gem "select2-rails"
 gem 'weather-icons-rails'
 gem 'wikipedia-client'
+gem 'httparty'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
