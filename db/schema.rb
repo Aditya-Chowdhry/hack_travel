@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204174310) do
+ActiveRecord::Schema.define(version: 20160316183226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "analyse_reviews", force: :cascade do |t|
+    t.string   "entities"
+    t.string   "sentiments"
+    t.string   "counts"
+    t.string   "relevances"
+    t.string   "types"
+    t.string   "scores"
+    t.decimal  "overall_sentitment"
+    t.integer  "review_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "analyse_reviews", ["review_id"], name: "index_analyse_reviews_on_review_id", using: :btree
 
   create_table "cities", force: :cascade do |t|
     t.string   "name"
@@ -71,6 +86,16 @@ ActiveRecord::Schema.define(version: 20160204174310) do
 
   add_index "places", ["state_id"], name: "index_places_on_state_id", using: :btree
 
+  create_table "reviews", force: :cascade do |t|
+    t.date     "review_date"
+    t.text     "review_body"
+    t.integer  "tourist_place_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "reviews", ["tourist_place_id"], name: "index_reviews_on_tourist_place_id", using: :btree
+
   create_table "states", force: :cascade do |t|
     t.string   "name"
     t.string   "link"
@@ -78,8 +103,20 @@ ActiveRecord::Schema.define(version: 20160204174310) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tourist_places", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "place_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "tourist_places", ["place_id"], name: "index_tourist_places_on_place_id", using: :btree
+
+  add_foreign_key "analyse_reviews", "reviews"
   add_foreign_key "concepts", "places"
   add_foreign_key "entities", "places"
   add_foreign_key "get_places", "places"
   add_foreign_key "places", "states"
+  add_foreign_key "reviews", "tourist_places"
+  add_foreign_key "tourist_places", "places"
 end

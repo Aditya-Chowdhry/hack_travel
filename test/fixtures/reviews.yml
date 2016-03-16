@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  review_date: 2016-03-16
+  review_body: MyText
+  tourist_place_id: 
+
+two:
+  review_date: 2016-03-16
+  review_body: MyText
+  tourist_place_id: 

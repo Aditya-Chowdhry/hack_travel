@@ -52,7 +52,7 @@
       <div class="col-md-2">
           <ul class="list-group">
           <li class="list-group-item list-group-item-default">Places<li>
-          <%@entities.each do |entity| %>
+          <!--<%@entities.each do |entity| %>
             <%if entity.type_t=="Place" || entity.type_t=="GeographicFeature" || entity.type_t=="Country" || entity.type_t=="City"%>
             <%if entity.sentiment== "positive"%>
               <li class="list-group-item list-group-item-success">
@@ -71,6 +71,13 @@
               </li>
             <%end%>
           <%end%>
+          <%end%>
+          -->
+          <%@tourist_places.each do |p|%>
+            <li class="list-group-item list-group-item-success">
+                <%=p.name%>
+                <span class="badge">0</span>
+            </li>
           <%end%>
         </ul>
         </div>
@@ -221,8 +228,20 @@
 </div>
 </div>
 <div class="row">
-  <div class="container-fluid" id="review">
-  <%=@place.reviews[0,3000]%>....
+  <div class="col-sm-3">
+    <div class="card card-block" >
+      <h3 class="card-title">Special title treatment</h3>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card card-block">
+      <h3 class="card-title">Special title treatment</h3>
+      <img src="https://otrazhenie.files.wordpress.com/2013/05/a-smile.jpg?w=150&h=150" alt="Card image">
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
   </div>
 </div>
 </div>

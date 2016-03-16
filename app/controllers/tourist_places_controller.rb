@@ -7,15 +7,17 @@ require 'wikipedia'
 
   def index
 
-    @places_name=Place.all.order("LENGTH(reviews) DESC")
+    @places_name = Place.all
     @names=[]
+    
     @places_name.each do |place|
       if place.name != "3"
         state=State.find_by(:id => place.state_id)
-        @names.push({id: place.id, name: place.name+"  (#{state.name})"})
+        #Pry.start(binding)
+        @names.push({id: place.id ,name: place.name + "  (#{state.name})" })
       end
-    end
 
+    end
 
   end
 
@@ -34,9 +36,10 @@ require 'wikipedia'
   def show
     @place_id=params[:place_id]
     @place=Place.find_by(:id => @place_id)
-    @entities=@place.entities.all
-    @concepts=@place.concepts.all
-    @wikis=@place.get_places.all
+    @tourist_places = @place.tourist_places
+    @entities = Array.new 
+    @concepts= Array.new
+    @wikis = Array.new
     @wikipedia=[]
     @wikis.each do |wiki|
       if wiki.title!= "India" && wiki.title.upcase != @place.name.upcase

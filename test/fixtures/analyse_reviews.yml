@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  entities: MyString
+  sentiments: MyString
+  counts: MyString
+  relevances: MyString
+  types: MyString
+  review_id: 
+
+two:
+  entities: MyString
+  sentiments: MyString
+  counts: MyString
+  relevances: MyString
+  types: MyString
+  review_id: 
