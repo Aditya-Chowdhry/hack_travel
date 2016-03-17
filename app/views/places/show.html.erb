@@ -1,0 +1,139 @@
+<div class="container-fluid">
+<div class="jumbotron">
+  <center><h1><%=@place.name%></h1>
+  <h3>Recommended:
+  <%if (@sentiments["positive"] + @sentiments["neutral"]) > 10 %>
+    <%if @sentiments["positive"] > @sentiments["negative"] + (@sentiments["neutral"]/2)%>
+      Yes<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+    <%elsif @sentiments["positive"] + (@sentiments["neutral"]/2) < @sentiments["negative"]%>
+      No <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+    <%else%>
+      Neutral <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+    <%end%>
+  <%else%>
+  Can't say need more reviews!
+  <%end%>
+</h3>
+
+</center>
+</div>
+
+
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="well">
+        <h2>Reviews</h2>
+        <p><%= pie_chart @sentiments %></p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="well">
+        <h3>What people are talking about?</h3>
+        	<%@entities.in_groups_of(2).each do |group|%>
+	        	<div class = "row">
+			        
+		        	<%group.each do |name,value|%>
+		        		<%if name%>
+			        		<div class="col-md-6"> 
+				        		<li class="list-group-item list-group-item-success">
+				              		<%=name%> 
+				              		<span class="badge"><%=value%></span>
+				            	</li>
+				          		
+				        	</div>
+				        	
+		        		<%end%>
+			        <%end%>
+
+		        </div>
+	        <%end%>	
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="well">
+        <h3>Not happy!</h3>
+        <%@problems.in_groups_of(2).each do |group|%>
+	        	<div class = "row">
+			        
+		        	<%group.each do |name,value|%>
+		        		<%if name%>
+			        		<div class="col-md-6"> 
+				        		<li class="list-group-item list-group-item-danger ">
+				              		<%=name%> 
+				              		<span class="badge"><%=value%></span>
+				            	</li>
+				          		
+				        	</div>
+				        	
+		        		<%end%>
+			        <%end%>
+
+		        </div>
+	        <%end%>	
+      </div>
+    </div>  
+  </div>
+  	
+  	<div class="row">
+  		<div class="panel panel-default">
+    		<div class="panel-body">
+      			<h2><center>Top places to visit in <%=@place.name%>!</center></h2>
+    		</div>
+  		</div>
+	</div>
+	<%@tourist_places.in_groups_of(3).each do |group|%>
+
+  		<div class="row">
+    		<%group.each do |tourist|%>
+    			<%if tourist%>
+    				<div class = "col-md-4">
+	   					<div class="panel panel-success">
+	   						<div class="panel-heading"><%=tourist.name%></div>
+	   						<div class="panel-body">
+	   							<div class = "row">
+	   								<%name = tourist.name.split(" ").join("-")%>
+	     							<%=image_tag(name+".png")%>
+	     						</div>
+	     						<div class = "row">
+	     							<%if tourist.summary%>
+	     							<p class="card-text"><%=tourist.summary[0..200]%>.......</p>
+	     							<%end%>
+	      							<center>
+	      							<%=link_to "Explore", tourist_place_path(tourist.id),:class => "btn btn-primary"%>
+	      							</center>
+	      						</div>
+	   						</div>
+	   		
+	   					</div>
+	  				</div>
+      		    <%end%>
+    	    <%end%>
+  		</div>
+
+	<%end%>
+	
+</div>
+
+  <div class="row" id="weather-row">
+    <div class="col-md-2 text-center" id="weather">
+      <img src="https://cdn0.iconfinder.com/data/icons/large-weather-icons/512/Dawn.png" class="img-responsive"/>
+      <h3>Weather Forecast</h3>
+    </div>
+    <%@weather.each do |k,v|%>
+    <div class="col-md-2 text-center">
+      <h3><%=v[3]%></h3>
+      <img src="http://openweathermap.org/img/w/<%=v[5]%>.png"/>
+      <h4>Temp: <%=v[0]%></h4>
+      <i>Min: <%=v[1]%>&nbsp;Max:<%=v[2]%></i>
+      <p><%=v[4]%></p>
+      <h3><%=k%></h3>
+    </div>
+    <%end%>
+  </div>
+
+
+
+  
+
+</div>

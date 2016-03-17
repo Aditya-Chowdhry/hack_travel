@@ -34,23 +34,91 @@ require 'wikipedia'
   end
 
   def show
-    @place_id=params[:place_id]
-    @place=Place.find_by(:id => @place_id)
-    @tourist_places = @place.tourist_places
-    @entities = Array.new 
-    @concepts= Array.new
-    @wikis = Array.new
-    @wikipedia=[]
-    @wikis.each do |wiki|
-      if wiki.title!= "India" && wiki.title.upcase != @place.name.upcase
-        @wikipedia.push(wiki)
-      end
-    end
+    @place_id = params[:id]
+    @place = TouristPlace.find_by(:id => @place_id)
+    @entities = Hash.new 
+    #Pry.start(binding)
     @sentiments={"positive" =>0,"negative" => 0, "neutral" => 0}
-    @entities.each do |entity|
-      @sentiments[entity.sentiment]= @sentiments[entity.sentiment] + 1
-    end
-    get_weather
+      
+      reviews = @place.reviews
+      reviews.each do |review|
+        review = review.analyse_review
+
+        if review
+          entities = review.entities.split(",")
+          counts = review.counts.split(",")
+          
+          sentiments = review.sentiments.split(",")
+          types = review.types.split(",")
+          
+          entities.each_index do |i|
+            if entities[i] != ""
+              
+              #Pry.start(binding)
+              begin
+              @sentiments[ sentiments[i] ] = @sentiments[ sentiments[i] ] + 1
+              
+
+                if @entities.has_key?(entities[i])
+                  arr = @entities[entities[i]]
+                  #arr[0] = count
+                  #arr[1] = positive count
+                  #arr[2] = neutral count
+                  #arr[3] = negative count
+                  #arr[4] = type
+                  arr[0] = arr[0] + counts[i].to_i
+                  if(sentiments[i] == "positive")
+                    arr[1] = arr[1] + 1 
+                  elsif (sentiments[i] == "neutral")
+                    arr[2] = arr[2] + 1
+                  else 
+                    arr[3] = arr[3] + 1
+                  end
+                  arr[4] = types[i]
+                  if arr[1] > arr[2] && arr[1] > arr[3]
+                    arr[5] = 0
+                  elsif arr[2] > arr[3] && arr[2] > arr[1]
+                    arr[5] = 1
+                  else
+                    arr[5] = 2
+                  end
+                  @entities[entities[i]] = arr 
+
+                else
+                  arr = Array.new(6,0)
+                  arr[0] = arr[0] + counts[i].to_i
+                  if(sentiments[i] == "positive")
+                    arr[1] = arr[1] + 1 
+                  elsif (sentiments[i] == "neutral")
+                    arr[2] = arr[2] + 1
+                  else 
+                    arr[3] = arr[3] + 1
+                  end
+                  arr[4] = types[i]
+                  if arr[1] > arr[2] && arr[1] > arr[3]
+                    arr[5] = 0
+                  elsif arr[2] > arr[3] && arr[2] > arr[1]
+                    arr[5] = 1
+                  else
+                    arr[5] = 2
+                  end
+                  
+                  @entities[ entities[i] ] = arr 
+                end   
+              
+              rescue
+                #Pry.start(binding)
+              end
+            end
+        end
+       end
+       
+      end
+      @entities = @entities.sort_by{ |_key,value| value[0]}.reverse
+      #@entities = @entities.first(14)
+      
+    @weather = Hash.new
+    #get_weather
 
   end
 
@@ -79,10 +147,7 @@ require 'wikipedia'
     #binding.pry
   end
 
-def get_wiki
 
-#binding.pry
-end
 
 
 end

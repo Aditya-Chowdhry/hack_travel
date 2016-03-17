@@ -1,0 +1,23 @@
+<!-- Banner -->
+    <section id="banner" class="img-responsive">
+      <h2>Not all those who wander are lost!</h2>
+
+      <center>
+      <div class="input-group">
+          <span class="input-group inline-block">	
+        	<%= form_tag(explore_path, method: :get) do %>
+          	<% places_array = @names.map { |place| [place[:name],place[:id]] } %>
+          	<%= select_tag(:place_id, options_for_select(places_array), class: "dropdown_single") %>
+            <button class="btn btn-default" action="submit">Explore!</button>
+          </span>
+        <% end %>
+      </div><!-- /input-group -->
+    </center>
+    </section>
+
+
+<footer class="footer">
+     <div class="container">
+       <h3 class="text-muted">Team: 200_OK</h3>
+     </div>
+</footer>

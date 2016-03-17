@@ -115,27 +115,63 @@ task wikipedia: :environment do
   require 'wikipedia'
   data=Hash.new
   i=0
-  places=Place.all
+  places = TouristPlace.all
   places.each do |place|
-  puts "#{place.name}"
-  entities=place.entities.all
-  entities.each do |entity|
-
-    arr=Array.new
-    page=Wikipedia.find(entity.name)
+    puts "#{place.name}"
+    
+    page=Wikipedia.find(place.name)
+    
     if !page.raw_data["query"]["pages"].has_key?("-1")
-      puts "#{entity.name}"
-      binding.pry
-      #place.get_places.create(:title =>page.title,:image_url => page.image_urls[0],:summary => page.summary)
+      puts "#{place.name}"
+      img_url = page.image_urls[0]
+      arr = place.name.split(" ")
+      flag = false
+      page.image_urls.each do |img|
+      
+        if img.include?("#{arr[0]}") || img.include?("#{arr[0].downcase}") || img.include?("#{arr[0].upcase}")
+          img_url = img
+          break
+        end
+      
+      end
+      #Pry.start(binding)
+      
+      place.update(:image_link => img_url,:summary => page.summary)
       puts "#{i}"
       i=i+1
     end
 
-    end
   end
 
 end
 
+
+desc "TODO"
+task download_images: :environment do
+  require "open-uri"
+  require 'rmagick'
+  tp = TouristPlace.all
+  tp.each do |p|
+    name = p.name.split(" ").join("-")
+     if p.image_link
+      #Pry.start(binding)
+      File.open("/home/aditya/project/hack_travel/app/assets/images/#{name}.png"  , 'wb') do |fo|
+        fo.write open("#{p.image_link}").read 
+      end
+      begin
+        
+      image = Magick::Image.read("/home/aditya/project/hack_travel/app/assets/images/#{name}.png").first
+      image.change_geometry!("300x300") { |cols, rows, img|
+      newimg = img.resize(cols, rows)
+      newimg.write("/home/aditya/project/hack_travel/app/assets/images/#{name}.png")
+      }
+      rescue
+        next    # do_something_* again, with same i
+      end
+      
+    end
+  end  
+end
 
 
 end

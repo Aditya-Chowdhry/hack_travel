@@ -1,13 +1,24 @@
 Rails.application.routes.draw do
-  root 'tourist_places#index'
+
+  resources :reviews
+
+  root 'places#index'
+  
+  get 'reviews/more' => 'reviews#show', as: :more
+  
+  get 'places/show'
+
+  get 'tourist_places/index'
 
   get 'tourist_places/create'
 
   get 'tourist_places/new'
 
+  resources :tourist_places
+
   get 'tourist_places/update'
 
-  get 'tourist_places/explore' => 'tourist_places#show', as: :explore
+  get 'places/explore' => 'places#show', as: :explore
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
