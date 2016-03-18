@@ -4,7 +4,7 @@ require 'open_weather'
 require 'httparty'
 require 'nokogiri'
 require 'wikipedia'
-
+require 'faker'
   def index
 
     @places_name = Place.all
@@ -36,12 +36,18 @@ require 'wikipedia'
   def show
     @place_id = params[:id]
     @place = TouristPlace.find_by(:id => @place_id)
+    @reviews = @place.reviews.order(review_date: :desc).paginate(:page => params[:page], :per_page => 5)
+    Faker::Config.locale = 'en-IND'
+    @names1 = Array.new
+    @names2 = Array.new
     @entities = Hash.new 
     #Pry.start(binding)
     @sentiments={"positive" =>0,"negative" => 0, "neutral" => 0}
       
       reviews = @place.reviews
       reviews.each do |review|
+        @names1.push(Faker::Name.name)
+        @names2.push(Faker::Name.name)
         review = review.analyse_review
 
         if review
@@ -119,7 +125,7 @@ require 'wikipedia'
       
     @weather = Hash.new
     #get_weather
-
+    @solutions = Solution.all.order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
   end
 
   def get_sentiment

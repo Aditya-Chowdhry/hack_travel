@@ -1,3 +1,4 @@
+<div class="container-fluid">
 <div class="jumbotron">
   <center><h1><%=@place.name%></h1>
   <h3>Recommended:
@@ -87,19 +88,19 @@
             <%if value[4]=="Facility" %>
             <%if value[5]== 0 %>
               <li class="list-group-item list-group-item-success">
-                <%=link_to "#{name}",more_path(:name => name)%>
+                <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
 
                 <span class="badge"><%=value[0]%></span>
               </li>
             <%elsif value[5] == 1%>
               <li class="list-group-item list-group-item-info">
-                <%=link_to "#{name}",more_path(:name => name)%>
+               <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
 
                 <span class="badge"><%=value[0]%></span>
               </li>
             <%else%>
               <li class="list-group-item list-group-item-danger">
-                <%=link_to "#{name}",more_path(:name => name)%>
+                <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
 
                 <span class="badge"><%=value[0]%></span>
               </li>
@@ -118,19 +119,19 @@
             <%if value[5]== 0 %>
               <li class="list-group-item list-group-item-success">
                 
-                <%=link_to "#{name}",more_path(:name => name)%>
+                <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
 
                 <span class="badge"><%=value[0]%></span>
               </li>
             <%elsif value[5] == 1%>
               <li class="list-group-item list-group-item-info">
-                <%=link_to "#{name}",more_path(:name => name)%>
-                
+                <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
+
                 <span class="badge"><%=value[0]%></span>
               </li>
             <%else%>
               <li class="list-group-item list-group-item-danger">
-                <%=link_to "#{name}",more_path(:name => name)%>
+                <%=link_to "#{name}",review_path(:name => name, :id => @place_id)%>
 
                 <span class="badge"><%=value[0]%></span>
               </li>
@@ -173,27 +174,63 @@
 
 
 <div class="row">
-  <div class="panel panel-default">
+   
+  <div class="col-md-6">
+    <div class="panel panel-default">
     <div class="panel-body">
-      <h2><center>User Reviews</center></h2>
+      <h3><center>User Reviews</center></h3>
     </div>
-</div>
-</div>
-<div class="row">
-  <div class="col-sm-3">
-    <div class="card card-block" >
-      <h3 class="card-title">Special title treatment</h3>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
+    <div class = "well">
+    <%= will_paginate @reviews%>
+      <%@reviews.each_index do |i|%>
+        <%if @reviews[i].review_body%>
+        <div class="panel panel-success">
+        <div class="panel-heading"><%=@names1[i]%> &nbsp; (<%=@reviews[i].review_date%>)</div>
+        <div class="panel-body">
+            <%= @reviews[i].review_body %>
+        </div>
+        </div>
+        <%end%>
+
+        <%end%>
+        
+
+      
+      <%= will_paginate @reviews%>
+    </div>
+         
   </div>
-  <div class="col-sm-3">
-    <div class="card card-block">
-      <h3 class="card-title">Special title treatment</h3>
-      <img src="https://otrazhenie.files.wordpress.com/2013/05/a-smile.jpg?w=150&h=150" alt="Card image">
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+   <div class ="col-md-6">
+      <div class="panel panel-default">
+      <div class="panel-body">
+        <h3><center>Recent Solutions/Answers/Advices</center></h3>
+      </div>
+      </div>
+      <div class = "well">
+        <%= will_paginate @solutions%>
+            <%@solutions.each_index do |i|%>
+              <%if @solutions[i].type_ == 1%>
+                <div class="panel panel-success">
+              <%elsif @solutions[i].type_ == 2%>
+                <div class="panel panel-info">
+              <%else%>
+                <div class="panel panel-danger">
+              <%end%> 
+                <div class="panel-heading"><%=@solutions[i].title%>&nbsp;&nbsp; by&nbsp;<%=@solutions[i].name%> &nbsp; (<%=@solutions[i].created_at.to_date%>)</div>
+              <div class="panel-body">
+                  <%= @solutions[i].body %><br>
+
+                  Tags:<br> 
+                  <%= link_to @solutions[i].entity,review_path(:name => @solutions[i].entity, :id => @solutions[i].tourist_place_id), :class => "btn btn-primary" %>
+                
+              </div>
+             </div>
+             <%end%>
+              <%= will_paginate @solutions%>
+            
+      </div>   
     </div>
-  </div>
+
 </div>
 </div>

@@ -1,2 +1,60 @@
-<h1>Reviews#show</h1>
-<p>Find me in app/views/reviews/show.html.erb</p>
+<div class="col-md-6">
+<div class = "well">
+<h3>Reviews</h3>
+<%@targeted_reviews.each_index do |i|%>
+<div class = "row">
+	<div class="panel panel-default">
+	  <div class="panel-heading"><%=@names[i]%></div>
+	  <div class="panel-body">
+	    	<%=@targeted_reviews[i].html_safe%>
+	  </div>
+	</div>
+</div>
+
+<%end%>
+
+</div>
+</div>
+
+<div class="col-md-6">
+<div class = "well">
+<h3>Solutions/Advices/Warnings</h3>
+<%@solutions.each_index do |i|%>
+<div class = "row">
+	<%if @solutions[i].type_ == 1%>
+		<div class="panel panel-success">
+	<%elsif @solutions[i].type_ == 2%>
+		<div class="panel panel-info">
+	<%else%>
+		<div class="panel panel-danger">
+	<%end%>	
+	  <div class="panel-heading"><%=@solutions[i].title%> by&nbsp;&nbsp;&nbsp; <i><%=@solutions[i].name%></i></div>
+	  <div class="panel-body">
+	    	<%=@solutions[i].body%>
+	  </div>
+	</div>
+</div>
+
+<%end%>
+</div>
+<div class = "well">
+<h3>
+	Help others!
+</h3>
+<%= form_for(@solution) do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title ,class: 'form-control'%>
+  
+  <%= f.label :type_ %>
+  <%= f.select(:type_,options_for_select([['Solution', '1'],
+                 ['Advice', '2'],['Warning','3']], '3'), class: 'form-control') %>
+  <br>
+  <%= f.label :body %>
+  <%= f.text_area :body ,class: 'form-control'%>
+  <%= f.hidden_field :entity, :value => @entity_name%>
+  <%= f.hidden_field :tourist_place_id, :value => @place_id%>
+  <%= f.submit "Submit",class: "btn btn-primary"%>
+<% end %>
+</div>
+<%=link_to "Give solutions?", give_solution_path(:entity => @entity_name)%>
+</div>

@@ -92,12 +92,17 @@
 	   						<div class="panel-heading"><%=tourist.name%></div>
 	   						<div class="panel-body">
 	   							<div class = "row">
-	   								<%name = tourist.name.split(" ").join("-")%>
-	     							<%=image_tag(name+".png")%>
+	   								<%name = tourist.name.split(" ").join("-") + ".png"%>
+                    <% if (has_image( name ))%>
+                      <% src = name %>  
+	     							<%else%>
+                      <% src = "default.jpg"%>  
+                    <%end%>
+                    <%=image_tag(src, alt:"default")%>
 	     						</div>
 	     						<div class = "row">
 	     							<%if tourist.summary%>
-	     							<p class="card-text"><%=tourist.summary[0..200]%>.......</p>
+	     							  <p class="card-text"><%=tourist.summary[0..200]%>.......</p>
 	     							<%end%>
 	      							<center>
 	      							<%=link_to "Explore", tourist_place_path(tourist.id),:class => "btn btn-primary"%>

@@ -35,7 +35,7 @@ require 'wikipedia'
   def show
     @place_id=params[:place_id]
     @place=Place.find_by(:id => @place_id)
-    @tourist_places = @place.tourist_places
+    @tourist_places = @place.tourist_places.reverse
     
     @entities = Hash.new 
     @problems = Hash.new
@@ -96,7 +96,7 @@ require 'wikipedia'
     	@problems = @problems.first(14)
     	@entities = @entities.first(14)
     	#Pry.start(binding)
-    
+      
     #get_weather
     @weather=Hash.new
   end
@@ -105,6 +105,7 @@ require 'wikipedia'
 
   end
 
+  
   def get_weather
     options = { units: "metric", APPID: "b24f0cde979fd9e1aa1485dc1279661d" }
     @weather=Hash.new

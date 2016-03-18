@@ -1,6 +1,8 @@
 class ReviewsController < ApplicationController
-# GET /reviews
+  # GET /reviews
   # GET /reviews.json
+  require 'faker'
+  Faker::Config.locale = :en
   def index
     @reviews = Review.all
   end
@@ -8,8 +10,35 @@ class ReviewsController < ApplicationController
   # GET /reviews/1
   # GET /reviews/1.json
   def show
-  	param = params[:name]
-  	Pry.start(binding)
+    @solution = Solution.new
+  	@entity_name = params[:name]
+
+    @solutions = Solution.where(:entity => @entity_name)
+    @place_id = params[:id]
+    
+    place = TouristPlace.find(@place_id)
+
+    reviews = place.reviews
+    @targeted_reviews = Array.new
+    @names = Array.new
+    reviews.each do |review|
+      analysed_review = review.analyse_review
+      if analysed_review
+        entities = analysed_review.entities.split(",")
+        entities.each do |entity|
+          if(entity == @entity_name)
+            text = review.review_body
+            index = text.index(entity)
+            
+            text = text[0..index-1] + "<span style=\"background-color:yellow;\">" + entity + "</span>" + text[index + entity.size..text.size]
+            @targeted_reviews.push(text)
+            @names.push(Faker::Name.name)
+            break
+          end
+        end
+      end
+    end
+  	#Pry.start(binding)
   	#place = TouristPlace.find(params[:id])
   	@reviews = place.reviews
 

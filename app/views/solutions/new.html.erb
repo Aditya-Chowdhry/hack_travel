@@ -1,0 +1,16 @@
+<div class = "well">
+
+<%= form_for(@solution) do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title ,class: 'form-control'%>
+  
+  <%= f.label :type_ %>
+  <%= f.select(:type_,options_for_select([['Solution', '1'],
+                 ['Advice', '2'],['Warning','3']], '3'), class: 'form-control') %>
+  
+  <%= f.label :body %>
+  <%= f.text_area :body ,class: 'form-control'%>
+  <%= f.hidden_field :entity, :value => params[:entity]%>
+  <%= f.submit "Submit",class: "btn btn-primary"%>
+<% end %>
+</div>

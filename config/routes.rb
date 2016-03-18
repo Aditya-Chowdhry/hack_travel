@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
+  resources :solutions
+  get 'give_solution' => 'solutions#new'
   resources :reviews
+
+  #post 'solutions/create' => 'solutions#create', as: :give_solution
 
   root 'places#index'
   
