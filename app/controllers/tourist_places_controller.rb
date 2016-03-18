@@ -123,8 +123,8 @@ require 'faker'
       @entities = @entities.sort_by{ |_key,value| value[0]}.reverse
       #@entities = @entities.first(14)
       
-    @weather = Hash.new
-    #get_weather
+    #@weather = Hash.new
+    get_weather
     @solutions = Solution.all.order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
   end
 

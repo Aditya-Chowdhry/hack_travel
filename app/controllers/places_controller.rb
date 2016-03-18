@@ -97,8 +97,8 @@ require 'wikipedia'
     	@entities = @entities.first(14)
     	#Pry.start(binding)
       
-    #get_weather
-    @weather=Hash.new
+    get_weather
+    #@weather=Hash.new
   end
 
   def get_sentiment
